@@ -29,6 +29,8 @@ Breakout::GameState game(1000, 500);
 
 void Breakout::GameState::init()
 {
+    // Empty the bricks set so that no bricks are left from the previous rounds
+    Bricks.clear();
 
     // Setting the initial player (x) position to the middle of the bottom row
     Player1.Position = FieldWidth / 2;
