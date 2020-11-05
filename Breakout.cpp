@@ -41,16 +41,21 @@ void Breakout::GameState::init()
     Ball1.Velocity_X = cos(theta);
     Ball1.Velocity_Y = sin(theta);
 
-    // Setting the initial set of Bricks
+    // Setting the initial set of Bricks randomly
     int max_y = FieldHeight - BrickMargin;
     int min_y = FieldHeight * 2 / 3;
+    // Calculating the number of brick lines based on the brick height
     int numOfBrickLines = (max_y - min_y) / BrickHeight;
+    // Initializing each of the brick lines
     for (int i = 0; i < numOfBrickLines; i++)
     {
+        // Setting the number of bricks, between values 8 to 1
         int numberOfBricks = rand() % (8 - 1 + 1) + 1;
+        // Setting the y coordinate as the proper height based on the brick line (from top)
         int y = FieldHeight - BrickMargin - ((BrickHeight / 2) + (i * BrickHeight));
         for (int j = 0; j < numberOfBricks; j++)
         {
+            // Choosing a random block in the block line, and calculating its appropriate x coordinate, adding the block to the set
             int brickNumber = rand() % (7 - 0 + 0) + 0;
             int x = (BrickWidth / 2) + (brickNumber * BrickWidth);
             Bricks.insert(Brick(x, y));
@@ -58,6 +63,7 @@ void Breakout::GameState::init()
     }
 }
 
+// Collision Detection Function
 bool Collision(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1)
 {
 
@@ -73,6 +79,7 @@ bool Collision(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1)
     return left <= right && top >= bottom;
 }
 
+// Collision Function, Returns the Collided Side
 int CollisionSide(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1)
 {
     // Top Collisions
@@ -93,6 +100,7 @@ int CollisionSide(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1
         {
             return 2;
         }
+        // No Collision
         else
         {
             return 8;
@@ -116,6 +124,7 @@ int CollisionSide(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1
         {
             return 5;
         }
+        // No Collision
         else
         {
             return 8;
@@ -134,17 +143,20 @@ int CollisionSide(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1
         {
             return 7;
         }
+        // No Collision
         else
         {
             return 8;
         }
     }
+    // No Collision
     else
     {
         return 8;
     }
 }
 
+// Next State Function
 void Breakout::GameState::next_state()
 {
 
@@ -190,10 +202,11 @@ void Breakout::GameState::next_state()
     {
         for (auto brick : Bricks)
         {
-            // If it's collided with a brick, erase the brick from the set
+            // If it's collided with a brick, erase the brick from the set, and based on the side of collision, adjust the speed and position
             int col = CollisionSide(brick.Position_X, brick.Position_Y, BrickHeight, BrickWidth, Ball1.Position_X - (BallSize / 2), Ball1.Position_Y - (BallSize / 2), BallSize, BallSize);
             if (col != NO_COLLISION)
             {
+                // Erase the brick from the set
                 Bricks.erase(brick);
                 switch (col)
                 {
@@ -203,13 +216,11 @@ void Breakout::GameState::next_state()
                     break;
                 case TOP_LEFT:
                     Ball1.Position_Y += BrickHeight / 2;
-                    // Ball1.Position_X -= BrickWidth / 2;
                     Ball1.Velocity_X *= -1;
                     Ball1.Velocity_Y *= -1;
                     break;
                 case TOP_RIGHT:
                     Ball1.Position_Y += BrickHeight / 2;
-                    // Ball1.Position_X += BrickWidth / 2;
                     Ball1.Velocity_X *= -1;
                     Ball1.Velocity_Y *= -1;
                     break;
@@ -219,13 +230,11 @@ void Breakout::GameState::next_state()
                     break;
                 case BOTTOM_LEFT:
                     Ball1.Position_Y -= BrickHeight / 2;
-                    // Ball1.Position_X -= BrickWidth / 2;
                     Ball1.Velocity_X *= -1;
                     Ball1.Velocity_Y *= -1;
                     break;
                 case BOTTOM_RIGHT:
                     Ball1.Position_Y -= BrickHeight / 2;
-                    // Ball1.Position_X += BrickWidth / 2;
                     Ball1.Velocity_X *= -1;
                     Ball1.Velocity_Y *= -1;
                     break;
@@ -246,6 +255,7 @@ void Breakout::GameState::next_state()
     glutTimerFunc(20, Breakout::timer, 0);
 }
 
+// Change State Function
 void Breakout::GameState::change_state(int state)
 {
     auto W = glutGet(GLUT_WINDOW_WIDTH);
@@ -258,6 +268,8 @@ void Breakout::GameState::change_state(int state)
 #pragma endregion
 
 #pragma region[OpenGL / GLUT Functions]
+
+// OpenGL Init Function
 void Breakout::init()
 {
     game.init();
@@ -293,6 +305,7 @@ void Breakout::init()
     glEndList();
 }
 
+// Render Function
 void Breakout::render()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -311,6 +324,7 @@ void Breakout::render()
     glCallList(BALL);
     glPopMatrix();
 
+    // Rendering the bricks
     for (auto brick : game.Bricks)
     {
         glPushMatrix();
@@ -322,6 +336,7 @@ void Breakout::render()
     glutSwapBuffers();
 }
 
+// Reshape Function
 void Breakout::reshape(int width, int height)
 {
     glMatrixMode(GL_PROJECTION);
@@ -403,3 +418,5 @@ int main(int argc, char **argv)
     Breakout::main(argc, argv);
     return 0;
 }
+
+#pragma endregion
