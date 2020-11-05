@@ -49,7 +49,7 @@ void Breakout::GameState::init()
     // Initializing each of the brick lines
     for (int i = 0; i < numOfBrickLines; i++)
     {
-        // Setting the number of bricks, between values 8 to 1
+        // Setting the number of bricks in the line, between values 8 to 1
         int numberOfBricks = rand() % (8 - 1 + 1) + 1;
         // Setting the y coordinate as the proper height based on the brick line (from top)
         int y = FieldHeight - BrickMargin - ((BrickHeight / 2) + (i * BrickHeight));
@@ -63,7 +63,7 @@ void Breakout::GameState::init()
     }
 }
 
-// Collision Detection Function
+// Collision Detection Function, Returns boolean value
 bool Collision(int x0, int y0, int h0, int w0, int x1, int y1, int h1, int w1)
 {
 
