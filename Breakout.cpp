@@ -3,6 +3,10 @@
 #include <cmath>
 #include "Breakout.h"
 
+#define FIELD 1000
+#define RAQUET 1001
+#define BRICK 1002
+
 using namespace std;
 
 // Initializing the Game State with height 1000 and 500 width
@@ -112,4 +116,50 @@ void Breakout::GameState::next_state()
     glutTimerFunc(20, Breakout::timer, 0);
 }
 
+void Breakout::GameState::change_state(int state)
+{
+    auto W = glutGet(GLUT_WINDOW_WIDTH);
 
+    Player1.Position = fmax(fmin(((float)state / W) * FieldWidth, FieldWidth - RaquetWidth), 0);
+
+    glutPostRedisplay();
+}
+
+#pragma endregion
+
+#pragma region[OpenGL/GLUT Functions]
+void Breakout::init() {
+
+    game.init();
+
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluOrtho2D(0, 1000, 0, 1000);
+
+    glNewList(FIELD, GL_COMPILE);
+    bresenham(0, 0, game.FieldWidth, 0);
+    bresenham(0, 0, 0, game.FieldHeight);
+    bresenham(game.FieldWidth - 1, 0, game.FieldWidth - 1, game.FieldHeight);
+    bresenham(0, game.FieldHeight - 1, game.FieldWidth, game.FieldHeight - 1);
+    glEndList();
+
+
+    glNewList(RAQUET, GL_COMPILE);
+    bresenham(0, 0, 0, game.RaquetHeight);
+    bresenham(0, 0, game.FieldWidth, 0);
+    bresenham(0, game.FieldHeight, game.FieldWidth, game.FieldHeight);
+    bresenham(game.FieldWidth, 0, game.FieldWidth, game.FieldHeight);
+    glEndList();
+
+    glNewList(BRICK, GL_COMPILE);
+    bresenham(0, 0, 0, game.BrickHeight);
+    bresenham(0, 0, game.BrickWidth, 0);
+    bresenham(0, game.BrickHeight, game.BrickWidth, game.BrickHeight);
+    bresenham(game.BrickWidth, 0, game.BrickWidth, game.BrickHeight);
+    glEndList();
+
+}
+
+
+#pragma endregion
