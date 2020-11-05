@@ -127,13 +127,13 @@ void Breakout::GameState::change_state(int state)
 
 #pragma endregion
 
-#pragma region[OpenGL/GLUT Functions]
-void Breakout::init() {
-
+#pragma region[OpenGL / GLUT Functions]
+void Breakout::init()
+{
     game.init();
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0, 1000, 0, 1000);
 
@@ -143,7 +143,6 @@ void Breakout::init() {
     bresenham(game.FieldWidth - 1, 0, game.FieldWidth - 1, game.FieldHeight);
     bresenham(0, game.FieldHeight - 1, game.FieldWidth, game.FieldHeight - 1);
     glEndList();
-
 
     glNewList(RAQUET, GL_COMPILE);
     bresenham(0, 0, 0, game.RaquetHeight);
@@ -158,8 +157,94 @@ void Breakout::init() {
     bresenham(0, game.BrickHeight, game.BrickWidth, game.BrickHeight);
     bresenham(game.BrickWidth, 0, game.BrickWidth, game.BrickHeight);
     glEndList();
-
 }
 
+void Breakout::render()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glCallList(FIELD);
+
+    glutSwapBuffers();
+}
+
+void Breakout::reshape(int width, int height)
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    auto aspectRatio = (float)game.FieldWidth / game.FieldHeight;
+    gluOrtho2D(0, game.FieldWidth, -game.FieldWidth / aspectRatio / 2 + game.FieldHeight / 2, game.FieldWidth / aspectRatio / 2 + game.FieldHeight / 2);
+
+    glViewport(5, 5, width - 10, height - 10);
+}
+
+void Breakout::keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 'i':
+    case 'I':
+        game.init();
+        break;
+    case 'q':
+    case 'Q':
+        exit(0);
+        break;
+    }
+}
+
+void Breakout::keyboard_control(int key, int x, int y)
+{
+}
+
+void Breakout::keyboard_up(int key, int x, int y)
+{
+}
+
+void Breakout::mouse(int button, int state, int x, int y)
+{
+}
+
+void Breakout::motion(int x, int y) {
+    game.change_state(x);
+}
+
+void Breakout::timer(int value) {
+    game.next_state();
+}
+
+void Breakout::main(int argc, char** argv) {
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+
+    glutInitWindowSize(600, 800);
+    glutCreateWindow("Breakout!");
+
+    Breakout::init();
+
+    glutDisplayFunc(Breakout::render);
+    glutReshapeFunc(Breakout::reshape);
+    glutKeyboardFunc(Breakout::keyboard);
+    glutSpecialFunc(Breakout::keyboard_control);
+    glutSpecialUpFunc(Breakout::keyboard_up);
+    glutMouseFunc(Breakout::mouse);
+    glutPassiveMotionFunc(Breakout::motion);
+    glutTimerFunc(20, Breakout::timer, 0);
+
+    glutMainLoop();
+}
 
 #pragma endregion
+
+#pragma region[Main Function]
+
+int main(int argc, char** argv) {
+
+    Breakout::main(argc, argv);
+    return 0;
+
+}

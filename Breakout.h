@@ -35,7 +35,6 @@ namespace Breakout
     class BrickHashFunction
     {
     public:
-        // id is returned as hash function
         size_t operator()(const Brick &b) const
         {
             return b.Position_X + 10 * b.Position_Y;
