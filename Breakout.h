@@ -1,6 +1,6 @@
 #include <unordered_set>
-#include "LineAlgos.cpp";
-#include "Circles.h";
+#include "LineAlgos.cpp"
+#include "Circles.h"
 
 namespace Breakout
 {
@@ -15,8 +15,8 @@ namespace Breakout
     {
         int Position_X;
         int Position_Y;
-        int Velocity_X;
-        int Velocity_Y;
+        float Velocity_X;
+        float Velocity_Y;
     };
 
     struct Brick

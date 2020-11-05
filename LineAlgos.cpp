@@ -8,7 +8,7 @@ using namespace std;
 void plotPixel(int x, int y) {
 
     glBegin(GL_POINTS);
-    glColor3f(1.0, 0.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
     glVertex2f(x, y);
     glEnd();
 
