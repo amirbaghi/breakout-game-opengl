@@ -1,5 +1,7 @@
+#pragma once
+
 #include <unordered_set>
-#include "LineAlgos.cpp"
+#include "LineAlgos.hpp"
 #include "Circles.h"
 
 namespace Breakout

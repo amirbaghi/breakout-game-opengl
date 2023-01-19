@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GL/glut.h>
 #include <cmath>
-#include "Circles.h"
+#include "./Headers/Circles.h"
 
 #define M_PI 3.14159265358979323846
 

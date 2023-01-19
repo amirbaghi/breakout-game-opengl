@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GL/glut.h>
 #include <cmath>
-#include "Breakout.h"
+#include "./Headers/Breakout.h"
 
 // Collision Side Macros
 #define TOP 0
